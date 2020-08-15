@@ -1,0 +1,28 @@
+;; shadow-cljs configuration
+{
+ ;:source-paths ["src"]
+ :lein {:profile "+cljs"}
+
+ ;:deps
+ ;       {:aliases [:dev :test]}
+
+ :dev-http
+       {8080 "public"}
+
+ ;:dependencies
+ ;       [[reagent "1.0.0-alpha2"]]
+
+ :log
+       {:level :debug}
+
+ :nrepl
+       {:port       3333
+        :middleware [cider.piggieback/wrap-cljs-repl]}
+
+ :builds
+       {:app {:target   :browser
+              :devtools {
+                         :before-load todo.core/stop
+                         :after-load  todo.core/start}
+              :modules  {:main {:init-fn todo.core/-init}}
+              }}}

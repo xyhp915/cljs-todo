@@ -1,0 +1,2 @@
+dev:
+	lein shadow-cljs
