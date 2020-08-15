@@ -24,10 +24,14 @@
                (js/localStorage.setItem app-cache-key cache-str))))
 
 ;;;; handlers ;;;;
+(defn resolve-item-position [identity]
+  (first (keep-indexed (fn [index it]
+                         (if (= (:id it) identity) index))
+                       (:items @*state))))
 
-(defn default-todo
-  [identity text]
-  {:id identity :text text :checked false :editing false})
+(defn gen-default-todo
+  [text]
+  {:id (inc (js/Date.now)) :text text :checked false :editing false})
 
 (defn fix-item-identities []
   (let [{:keys [items]} @*state]
@@ -45,19 +49,17 @@
 
 (defn on-add-item [input]
   (when-not (clojure.string/blank? input)
-    (swap! *state update :items conj (default-todo (count (:items @*state)) input))))
+    (swap! *state update :items conj (gen-default-todo input))))
 
 (defn on-toggle-all [checked?]
   (map-items #(assoc % :checked checked?)))
 
 (defn on-toggle-item [identity checked]
-  (do
-    (js/console.log identity)
-    (swap! *state assoc-in [:items identity :checked] checked)))
+  (let [pos (resolve-item-position identity)]
+    (swap! *state assoc-in [:items pos :checked] checked)))
 
 (defn on-remove-item [identity]
-  (swap! *state update :items (fn [items] (remove #(= (:id %) identity) items)) (:items @*state))
-  (fix-item-identities))
+  (swap! *state update :items (fn [items] (remove #(= (:id %) identity) items)) (:items @*state)))
 
 (defn check-has-item-completed? []
   (some #(true? (:checked %)) (:items @*state)))
@@ -65,8 +67,7 @@
 (defn on-clear-completed []
   (if (check-has-item-completed?)
     (let [{:keys [items]} @*state]
-      (swap! *state assoc :items (filterv #(not (:checked %)) items)
-             (fix-item-identities)))))
+      (swap! *state assoc :items (filterv #(not (:checked %)) items)))))
 
 ;;; TODO App components ;;;;
 (rum/defc app-header
