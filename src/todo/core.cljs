@@ -1,6 +1,7 @@
 (ns todo.core
   (:require
-    [rum.core :as rum]))
+    [rum.core :as rum]
+    [clojure.string :as string]))
 
 (def app-cache-key "__todo__cljs__")
 
@@ -42,21 +43,36 @@
                      (js/console.log k v)
                      (assoc v :id k)) items)))))
 
-(defn map-items
+(defn map-items-and-swap!
   [it-handler]
   (let [{:keys [items]} @*state]
     (swap! *state #(assoc @*state :items (into [] (map it-handler items))))))
+
+(defn touch-item-with-identity!
+  [identity handler]
+  (map-items-and-swap! #(if (= (:id %) identity)
+                          (handler %)
+                          %)))
 
 (defn on-add-item [input]
   (when-not (clojure.string/blank? input)
     (swap! *state update :items conj (gen-default-todo input))))
 
 (defn on-toggle-all [checked?]
-  (map-items #(assoc % :checked checked?)))
+  (map-items-and-swap! #(assoc % :checked checked?)))
 
 (defn on-toggle-item [identity checked]
   (let [pos (resolve-item-position identity)]
     (swap! *state assoc-in [:items pos :checked] checked)))
+
+(defn on-edit-item [identity]
+  (touch-item-with-identity! identity #(assoc % :editing true)))
+
+(defn on-edit-item-confirmed [identity value]
+  (if-not (clojure.string/blank? value)
+    (touch-item-with-identity! identity #(assoc %
+                                           :editing false
+                                           :text value))))
 
 (defn on-remove-item [identity]
   (swap! *state update :items (fn [items] (remove #(= (:id %) identity) items)) (:items @*state)))
@@ -87,17 +103,31 @@
 
 (rum/defc todo-list-item < rum/static
   [identity text checked editing]
-  [:li
-   {:class [(if checked "completed")
-            (if editing "editing")]}
-   [:div.view
-    [:input.toggle {:type      "checkbox"
-                    :checked   checked
-                    :on-change #(on-toggle-item identity (.. % -target -checked))}]
-    [:label (str "" text)]
-    [:button.destroy {:on-click #(on-remove-item identity)
-                      }]]
-   [:input.edit {:default-value text}]])
+  (let [input-ref (rum/create-ref)]
+    [:li
+     {:class [(if checked "completed")
+              (if editing "editing")]}
+     [:div.view
+      [:input.toggle {:type      "checkbox"
+                      :checked   checked
+                      :on-change #(on-toggle-item identity (.. % -target -checked))}]
+      [:label {:style           {:user-select "none"}
+               :on-double-click #(let [input-el (rum/deref input-ref)]
+                                   (on-edit-item identity)
+                                   (js/setTimeout (fn [] (.select input-el)) 1)
+                                   ;(js/console.log (rum/deref input-ref))
+                                   )} (str "" text)]
+      [:button.destroy {:on-click #(on-remove-item identity)
+                        }]]
+     [:input.edit {:default-value text
+                   :ref           input-ref
+                   :autoFocus     true
+                   :on-key-down   (fn [e]
+                                    (let [target (. e -target)
+                                          value (. target -value)
+                                          key (. e -key)]
+                                      (if (= key "Enter")
+                                        (on-edit-item-confirmed identity value))))}]]))
 
 (rum/defc app-content
   [items]
@@ -132,8 +162,7 @@
       "Clear completed"])])
 
 ;;; root app
-(rum/defcs app < rum/reactive
-  []
+(rum/defcs app < rum/reactive []
   (let [{:keys [items]} (rum/react *state)]
     [:div.todoapp
      (app-header)
@@ -150,7 +179,6 @@
 (defn start
   "start ui"
   []
-  ;(rdom/render [-app] (get-container-el))
   (rum/mount (app) (get-container-el))
   )
 
