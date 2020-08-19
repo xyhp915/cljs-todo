@@ -1,7 +1,7 @@
 (ns todo.core
   (:require
     [rum.core :as rum]
-    [clojure.string :as string]))
+    ["use-click-outside" :default use-click-outside]))
 
 (def app-cache-key "__todo__cljs__")
 
@@ -103,9 +103,17 @@
 
 (rum/defc todo-list-item < rum/static
   [identity text checked editing]
-  (let [input-ref (rum/create-ref)]
+  (let [input-ref (rum/create-ref)
+        item-ref (rum/create-ref)]
+    (use-click-outside
+      item-ref
+      (fn [e]
+        (if editing
+          (let [input-el (rum/deref input-ref)]
+            (on-edit-item-confirmed identity (.-value input-el))))))
     [:li
-     {:class [(if checked "completed")
+     {:ref   item-ref
+      :class [(if checked "completed")
               (if editing "editing")]}
      [:div.view
       [:input.toggle {:type      "checkbox"
