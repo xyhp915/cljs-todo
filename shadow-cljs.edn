@@ -1,28 +1,31 @@
-;; shadow-cljs configuration
-{
- ;:source-paths ["src"]
- :lein {:profile "+cljs"}
+{:source-paths ["src"]
+ :lein         {:profile "+cljs"}
 
  ;:deps
  ;       {:aliases [:dev :test]}
 
- :dev-http
-       {8080 "public"}
+ :dev-http     {8080 "public"}
 
  ;:dependencies
  ;       [[reagent "1.0.0-alpha2"]]
 
- :log
-       {:level :debug}
+ :log          {:level :debug}
 
- :nrepl
-       {:port       3333
-        :middleware [cider.piggieback/wrap-cljs-repl]}
+ :nrepl        {:port       3333
+                :middleware [cider.piggieback/wrap-cljs-repl]}
 
- :builds
-       {:app {:target   :browser
-              :devtools {
-                         :before-load todo.core/stop
-                         :after-load  todo.core/start}
-              :modules  {:main {:init-fn todo.core/-init}}
-              }}}
+ :builds       {:app           {:target     :browser
+                                :output-dir "public/js"
+                                :devtools   {:before-load todo.core/stop
+                                             :after-load  todo.core/start}
+                                :modules    {:main {:init-fn todo.core/-init}}}
+                :electron-main {:target           :node-script
+                                :output-to        "public/js/main-process.js"
+                                :main             electron.main/-main
+                                :compiler-options {:output-feature-set :es7}}
+                :test          {:target    :browser-test
+                                :test-dir  "public/test"
+                                :ns-regexp "^test"
+                                :runner-ns test.core
+                                :devtools  {:http-port 8021
+                                            :http-root "public/test"}}}}

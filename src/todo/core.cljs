@@ -34,15 +34,6 @@
   [text]
   {:id (inc (js/Date.now)) :text text :checked false :editing false})
 
-(defn fix-item-identities []
-  (let [{:keys [items]} @*state]
-    (swap! *state assoc :items
-           (into []
-                 (map-indexed
-                   (fn [k v]
-                     (js/console.log k v)
-                     (assoc v :id k)) items)))))
-
 (defn map-items-and-swap!
   [it-handler]
   (let [{:keys [items]} @*state]
@@ -75,7 +66,7 @@
                                            :text value))))
 
 (defn on-remove-item [identity]
-  (swap! *state update :items (fn [items] (remove #(= (:id %) identity) items)) (:items @*state)))
+  (swap! *state update :items (fn [items] (vec (remove #(= (:id %) identity) items))) (:items @*state)))
 
 (defn check-has-item-completed? []
   (some #(true? (:checked %)) (:items @*state)))
@@ -116,10 +107,12 @@
       :class [(if checked "completed")
               (if editing "editing")]}
      [:div.view
-      [:input.toggle {:type      "checkbox"
+      [:input.toggle {:id        (str "input-it-" identity)
+                      :type      "checkbox"
                       :checked   checked
                       :on-change #(on-toggle-item identity (.. % -target -checked))}]
       [:label {:style           {:user-select "none"}
+               :for             (str "input-it-" identity)
                :on-double-click #(let [input-el (rum/deref input-ref)]
                                    (on-edit-item identity)
                                    (js/setTimeout (fn [] (.select input-el)) 1)
@@ -169,13 +162,23 @@
       {:on-click on-clear-completed}
       "Clear completed"])])
 
+(defn page-footer []
+  (let [link (fn [text href]
+               [:a {:href href :target "_blank"} text])]
+    [:p.page-footer
+     "©2021 Made with " (link "CLJS" "https://clojurescript.org/index") " & " (link "Github" "https://github.com/xyhp915/cljs-todo") " & ❤️"]
+    ))
+
 ;;; root app
-(rum/defcs app < rum/reactive []
+(rum/defcs app < rum/reactive
+  []
   (let [{:keys [items]} (rum/react *state)]
-    [:div.todoapp
-     (app-header)
-     (app-content items)
-     (app-footer on-clear-completed (count items))])
+    [:div.app-wrap
+     [:div.todoapp
+      (app-header)
+      (app-content items)
+      (app-footer on-clear-completed (count items))]
+     (page-footer)])
   )
 
 (defn get-container-el
@@ -187,8 +190,7 @@
 (defn start
   "start ui"
   []
-  (rum/mount (app) (get-container-el))
-  )
+  (rum/mount (app) (get-container-el)))
 
 (defn stop
   "stop ui"

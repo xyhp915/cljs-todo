@@ -1,6 +1,8 @@
 (defproject app "0.1.0-SNAPSHOT"
   :aliases
-  {"shadow-cljs" ["with-profile" "+cljs" "run" "-m" "shadow.cljs.devtools.cli" "watch" "app"]}
+  {"shadow-cljs"         ["with-profile" "+cljs" "run" "-m" "shadow.cljs.devtools.cli"]
+   "shadow-cljs-dev"     ["with-profile" "+cljs" "run" "-m" "shadow.cljs.devtools.cli" "watch" "app"]
+   "shadow-cljs-compile" ["with-profile" "+cljs" "run" "-m" "shadow.cljs.devtools.cli" "compile" "app"]}
 
   :dependencies
   [[org.clojure/clojure "1.10.1"]

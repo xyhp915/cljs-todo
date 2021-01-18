@@ -1,4 +1,4 @@
-(ns todo.app)
+(ns todo.playground)
 
 
 (let [items (map #(str "#" % "#") (replicate 10 "🚀"))]
