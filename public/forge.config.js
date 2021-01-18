@@ -16,7 +16,9 @@ module.exports = {
       name: '@electron-forge/maker-dmg',
       config: {
         background: './assets/bg.png',
-        format: 'ULFO'
+        format: 'ULFO',
+        icon: './assets/icon.icns',
+        name: 'CLJS ToDo®'
       }
     },
     {

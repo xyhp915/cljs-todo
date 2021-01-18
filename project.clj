@@ -2,7 +2,8 @@
   :aliases
   {"shadow-cljs"         ["with-profile" "+cljs" "run" "-m" "shadow.cljs.devtools.cli"]
    "shadow-cljs-dev"     ["with-profile" "+cljs" "run" "-m" "shadow.cljs.devtools.cli" "watch" "app"]
-   "shadow-cljs-compile" ["with-profile" "+cljs" "run" "-m" "shadow.cljs.devtools.cli" "compile" "app"]}
+   "shadow-cljs-compile" ["with-profile" "+cljs" "run" "-m" "shadow.cljs.devtools.cli" "compile" "app"]
+   "shadow-cljs-release" ["with-profile" "+cljs" "run" "-m" "shadow.cljs.devtools.cli" "release" "app"]}
 
   :dependencies
   [[org.clojure/clojure "1.10.1"]

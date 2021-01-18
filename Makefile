@@ -4,12 +4,14 @@ dev:
 build:
 	lein shadow-cljs-compile
 
+release:
+	lein shadow-cljs-release
+
 build-electron-main-dev:
 	lein shadow-cljs watch electron-main
 
 build-electron-main:
 	lein shadow-cljs compile electron-main
-
 
 release-electron-main:
 	lein shadow-cljs release electron-main
@@ -17,7 +19,7 @@ release-electron-main:
 electron-dev-main:
 	cd public/ && yarn run electron:dev
 
-electron-release-darwin:
+electron-release-darwin: release-electron-main release
 	cd public/ && yarn run electron:make:darwin
 
 electron-release-win32:
