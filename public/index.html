@@ -8,14 +8,17 @@
   <title>Document</title>
   <link rel="stylesheet" href="todomvc.css">
   <style>
-      .todo-list {
-          display: flex;
-          flex-direction: column-reverse;
-      }
+    .todo-list {
+      display: flex;
+      flex-direction: column-reverse;
+    }
   </style>
 </head>
 <body>
 <div id="root">Loading...</div>
+<script>
+  window.__worker0 = new Worker('./worker.js')
+</script>
 <script src="js/main.js"></script>
 </body>
 </html>

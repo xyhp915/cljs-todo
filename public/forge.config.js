@@ -25,5 +25,18 @@ module.exports = {
       name: '@electron-forge/maker-zip',
       platforms: ['darwin', 'linux']
     }
+  ],
+
+  publishers: [
+    {
+      name: '@electron-forge/publisher-github',
+      config: {
+        repository: {
+          owner: 'xyhp915',
+          name: 'cljs-todo'
+        },
+        prerelease: true
+      }
+    }
   ]
 }

@@ -1,6 +1,6 @@
 {
   "name": "cljs-todo",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "main": "js/main-process.js",
   "author": "Charlie",
   "description": "Yet another clj todo App",
@@ -9,28 +9,26 @@
     "electron:debug": "electron-forge start --inspect-electron",
     "electron:make:darwin": "electron-forge make --platform darwin",
     "electron:make:win32": "electron-forge make --platform win32",
-    "electron:make:linux": "electron-forge make --platform linux"
+    "electron:make:linux": "electron-forge make --platform linux",
+    "electron:publish:github": "electron-forge publish"
   },
   "config": {
     "forge": "./forge.config.js"
   },
   "dependencies": {
-    "react": "16.13.0",
-    "react-dom": "16.13.0",
-    "todomvc-app-css": "^2.3.0",
-    "use-click-outside": "^2.0.0",
-    "electron-squirrel-startup": "^1.0.0"
+    "electron-log": "^4.3.1",
+    "electron-squirrel-startup": "^1.0.0",
+    "electron-updater": "^4.3.5",
+    "update-electron-app": "^2.0.1"
   },
   "devDependencies": {
-    "electron": "11.2.0",
-    "shadow-cljs": "2.10.19",
-    "source-map-support": "^0.5.19",
     "@electron-forge/cli": "^6.0.0-beta.54",
     "@electron-forge/maker-deb": "^6.0.0-beta.54",
     "@electron-forge/maker-dmg": "^6.0.0-beta.54",
     "@electron-forge/maker-rpm": "^6.0.0-beta.54",
     "@electron-forge/maker-squirrel": "^6.0.0-beta.54",
-    "@electron-forge/maker-zip": "^6.0.0-beta.54"
+    "@electron-forge/maker-zip": "^6.0.0-beta.54",
+    "electron": "11.2.0"
   },
   "license": "MIT"
 }

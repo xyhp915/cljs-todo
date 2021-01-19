@@ -166,7 +166,7 @@
   (let [link (fn [text href]
                [:a {:href href :target "_blank"} text])]
     [:p.page-footer
-     "©2021 Made with " (link "CLJS" "https://clojurescript.org/index") " & " (link "Github" "https://github.com/xyhp915/cljs-todo") " & ❤️"]
+     "©2021 Made with " (link "CLJS" "https://clojurescript.org/index") " & " (link "Github" "https://github.com/xyhp915/cljs-todo") " & ❤️ & ☕️"]
     ))
 
 ;;; root app

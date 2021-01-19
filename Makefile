@@ -24,3 +24,6 @@ electron-release-darwin: release-electron-main release
 
 electron-release-win32:
 	cd public/ && yarn run electron:make:win32
+
+electron-publish-github:
+	cd public/ && yarn run electron:publish:github

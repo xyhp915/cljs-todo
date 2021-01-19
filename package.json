@@ -3,21 +3,24 @@
   "version": "0.0.1",
   "scripts": {},
   "dependencies": {
+    "electron-squirrel-startup": "^1.0.0",
     "react": "16.13.0",
     "react-dom": "16.13.0",
     "todomvc-app-css": "^2.3.0",
-    "use-click-outside": "^2.0.0",
-    "electron-squirrel-startup": "^1.0.0"
+    "use-click-outside": "^2.0.0"
   },
   "devDependencies": {
-    "electron": "11.2.0",
-    "shadow-cljs": "2.10.19",
-    "source-map-support": "^0.5.19",
     "@electron-forge/cli": "^6.0.0-beta.54",
     "@electron-forge/maker-deb": "^6.0.0-beta.54",
     "@electron-forge/maker-dmg": "^6.0.0-beta.54",
     "@electron-forge/maker-rpm": "^6.0.0-beta.54",
     "@electron-forge/maker-squirrel": "^6.0.0-beta.54",
-    "@electron-forge/maker-zip": "^6.0.0-beta.54"
+    "@electron-forge/maker-zip": "^6.0.0-beta.54",
+    "@electron-forge/publisher-github": "^6.0.0-beta.54",
+    "electron": "11.2.0",
+    "electron-log": "^4.3.1",
+    "electron-updater": "^4.3.5",
+    "shadow-cljs": "2.10.19",
+    "source-map-support": "^0.5.19"
   }
 }
