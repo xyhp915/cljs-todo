@@ -1,8 +1,7 @@
 (ns electron.main
   (:require ["fs" :as fs]
             ["path" :as path]
-            ["electron" :refer [BrowserWindow app] :as electron]
-            ["electron-updater" :refer [autoUpdater]]))
+            ["electron" :refer [BrowserWindow app Menu dialog autoUpdater] :as electron]))
 
 (defonce mac? (= (.-platform js/process) "darwin"))
 (defonce win32? (= (.-platform js/process) "win32"))
@@ -10,6 +9,7 @@
 (defonce prod? (= js/process.env.NODE_ENV "production"))
 (defonce dev? (not prod?))
 (defonce log (js/require "electron-log"))
+(defonce updater (js/require "../updater.js"))
 
 (def ROOT_PATH (path/join js/__dirname ".."))
 (def ASSETS_ROOT_PATH (path/join ROOT_PATH "assets"))
@@ -18,6 +18,15 @@
 ;; Handle creating/removing shortcuts on Windows when installing/uninstalling.
 (when (js/require "electron-squirrel-startup") (.quit app))
 
+(defn setup-menu!
+  "setup global menu"
+  []
+  (let [menu (. Menu buildFromTemplate (clj->js (-> []
+                                                    (conj {:label   "ToDo™ App"
+                                                           :submenu [{:label "check for update"
+                                                                      :id    "update"
+                                                                      :click updater.checkForUpdates}]}))))]
+    (. Menu setApplicationMenu menu)))
 
 (defn create-main-window
   "create main app window"
@@ -25,11 +34,13 @@
   (let [win-opts {:width  980
                   :height 700
                   :webPreferences
-                          {:nodeIntegration false}}
+                          {:nodeIntegration         true
+                           :nodeIntegrationInWorker true}}
         url (if dev? "http://localhost:8080" MAIN_PROD_WINDOW_ENTRY)
         win (BrowserWindow. (clj->js win-opts))]
+    (setup-menu!)
     (.loadURL win url)
-    (when dev? (.. win -webContents (openDevTools)))
+    ;(when dev? (.. win -webContents (openDevTools)))
     win))
 
 (defn setup-updater! [notify-update-status]

@@ -7,8 +7,8 @@ build:
 release:
 	lein shadow-cljs-release
 
-build-electron-main-dev:
-	lein shadow-cljs watch electron-main
+dev-electron-main-and-renderer:
+	lein shadow-cljs watch app electron-main
 
 build-electron-main:
 	lein shadow-cljs compile electron-main
