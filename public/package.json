@@ -1,14 +1,13 @@
 {
   "name": "cljs-todo",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "main": "js/main-process.js",
   "author": "Charlie",
   "description": "Yet another clj todo App",
   "scripts": {
     "electron:dev": "electron-forge start",
     "electron:debug": "electron-forge start --inspect-electron",
-    "electron:make:darwin": "electron-forge make --platform darwin",
-    "electron:make:win32": "electron-forge make --platform win32",
+    "electron:make": "electron-forge make",
     "electron:make:linux": "electron-forge make --platform linux",
     "electron:publish:github": "electron-forge publish"
   },

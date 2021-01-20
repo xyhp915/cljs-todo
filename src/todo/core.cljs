@@ -1,9 +1,12 @@
 (ns todo.core
   (:require
     [rum.core :as rum]
+    [goog.userAgent]
     ["use-click-outside" :default use-click-outside]))
 
-(def app-cache-key "__todo__cljs__")
+;;; constants
+(defonce app-cache-key "__todo__cljs__")
+(defonce mac? goog.userAgent/MAC)
 
 ;;; helpers ;;;;
 (defn restore-app-state []
@@ -89,8 +92,7 @@
                        (let [target (. % -target)]
                          (do
                            (on-add-item (. target -value))
-                           (set! (. target -value) ""))))
-     }]])
+                           (set! (. target -value) ""))))}]])
 
 (rum/defc todo-list-item < rum/static
   [identity text checked editing]
@@ -118,8 +120,7 @@
                                    (js/setTimeout (fn [] (.select input-el)) 1)
                                    ;(js/console.log (rum/deref input-ref))
                                    )} (str "" text)]
-      [:button.destroy {:on-click #(on-remove-item identity)
-                        }]]
+      [:button.destroy {:on-click #(on-remove-item identity)}]]
      [:input.edit {:default-value text
                    :ref           input-ref
                    :autoFocus     true
@@ -148,8 +149,7 @@
         (rum/with-key
           ;;; TODO: memorize function component
           (apply todo-list-item [id text checked editing])
-          id))
-      ]]))
+          id))]]))
 
 (rum/defc app-footer
   [on-clear-completed item-size]
@@ -166,11 +166,15 @@
   (let [link (fn [text href]
                [:a {:href href :target "_blank"} text])]
     [:p.page-footer
-     "©2021 Made with " (link "CLJS" "https://clojurescript.org/index") " & " (link "Github" "https://github.com/xyhp915/cljs-todo") " & ❤️ & ☕️"]
-    ))
+     "©2021 Made with " (link "CLJS" "https://clojurescript.org/index") " & " (link "Github" "https://github.com/xyhp915/cljs-todo") " & ❤️ & ☕️"]))
 
 ;;; root app
-(rum/defcs app < rum/reactive
+(rum/defcs app <
+  rum/reactive
+  {:will-mount (fn [state]
+                 (let [body js/document.body]
+                   (when mac? (.. body -classList (add "is-mac"))))
+                 state)}
   []
   (let [{:keys [items]} (rum/react *state)]
     [:div.app-wrap
@@ -178,8 +182,7 @@
       (app-header)
       (app-content items)
       (app-footer on-clear-completed (count items))]
-     (page-footer)])
-  )
+     (page-footer)]))
 
 (defn get-container-el
   "get root container element"

@@ -29,6 +29,22 @@ body {
   font-weight: 300;
 }
 
+body.is-mac {
+  padding-top: 60px;
+}
+
+body.is-mac::after {
+  content: " ";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 26px;
+  background-color: #cdcdf6;
+  opacity: 0;
+  -webkit-app-region: drag;
+}
+
 :focus {
   outline: 0;
 }

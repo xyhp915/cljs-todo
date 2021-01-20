@@ -31,14 +31,15 @@
 (defn create-main-window
   "create main app window"
   []
-  (let [win-opts {:width  980
-                  :height 700
+  (let [win-opts {:width         980
+                  :height        700
+                  :titleBarStyle (if mac? "hidden" nil)
                   :webPreferences
-                          {:nodeIntegration         true
-                           :nodeIntegrationInWorker true}}
+                                 {:nodeIntegration         true
+                                  :nodeIntegrationInWorker true}}
         url (if dev? "http://localhost:8080" MAIN_PROD_WINDOW_ENTRY)
         win (BrowserWindow. (clj->js win-opts))]
-    (setup-menu!)
+    ;(setup-menu!)
     (.loadURL win url)
     ;(when dev? (.. win -webContents (openDevTools)))
     win))
