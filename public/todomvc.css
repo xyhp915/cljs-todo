@@ -29,19 +29,18 @@ body {
   font-weight: 300;
 }
 
-body.is-mac {
+body.is-frameless {
   padding-top: 60px;
 }
 
-body.is-mac::after {
+body.is-frameless::after {
   content: " ";
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 26px;
-  background-color: #cdcdf6;
-  opacity: 0;
+  background-color: #fcf3b8;
   -webkit-app-region: drag;
 }
 

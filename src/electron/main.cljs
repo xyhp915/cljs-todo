@@ -34,9 +34,12 @@
   (let [win-opts {:width         980
                   :height        700
                   :titleBarStyle (if mac? "hidden" nil)
+                  :frame false
                   :webPreferences
-                                 {:nodeIntegration         true
-                                  :nodeIntegrationInWorker true}}
+                  {:nodeIntegration         false
+                   :nodeIntegrationInWorker false
+                   :contextIsolation        true
+                   :preload                 (str ROOT_PATH "/preload.js")}}
         url (if dev? "http://localhost:8080" MAIN_PROD_WINDOW_ENTRY)
         win (BrowserWindow. (clj->js win-opts))]
     ;(setup-menu!)
@@ -70,7 +73,7 @@
   ;  (.on "update-downloaded" #(do (notify-update-status "update downloaded")
   ;                                (.. autoUpdater quitAndInstall)))
   ;  (.checkForUpdatesAndNotify))
-  )
+)
 
 (defn -main
   []

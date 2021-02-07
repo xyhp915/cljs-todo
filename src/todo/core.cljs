@@ -172,8 +172,10 @@
 (rum/defcs app <
   rum/reactive
   {:will-mount (fn [state]
-                 (let [body js/document.body]
-                   (when mac? (.. body -classList (add "is-mac"))))
+                 (let [body js/document.body
+                       cl (. body -classList)]
+                   (.add cl "is-frameless")
+                   (when mac? (. cl (add "is-mac"))))
                  state)}
   []
   (let [{:keys [items]} (rum/react *state)]

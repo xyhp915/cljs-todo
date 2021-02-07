@@ -18,7 +18,8 @@
                                 :output-dir "public/js"
                                 :devtools   {:before-load todo.core/stop
                                              :after-load  todo.core/start}
-                                :modules    {:main {:init-fn todo.core/-init}}}
+                                :modules    {:main {:init-fn todo.core/-init}}
+                                :source-map true}
                 :electron-main {:target           :node-script
                                 :output-to        "public/js/main-process.js"
                                 :main             electron.main/-main
